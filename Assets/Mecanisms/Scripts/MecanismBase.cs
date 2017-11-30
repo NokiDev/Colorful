@@ -17,6 +17,11 @@ public abstract class MecanismBase : MonoBehaviour, IMecanism
         OnActivation += () => { };
         OnDeactivation += () => { };
     }
+
+    private void Start()
+    {
+        
+    }
     
     public void Activate()
     {

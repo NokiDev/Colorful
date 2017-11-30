@@ -34,13 +34,12 @@ public class ColorInfoScript : MonoBehaviour
             {
                 _PlayerMeshRenderer.material.color += _MeshRenderer.material.color;
             }
-            else if (Input.GetKeyDown(KeyCode.Return)) // Swap Colors
+            else if (Input.GetButtonDown("ColorSwap")) // Swap Colors
             {
                 if (_PlayerMeshRenderer.material.color != Color.black)
                     _CurrentDetectedColor.material.color = _PlayerMeshRenderer.material.color;
                 _PlayerMeshRenderer.material.color = _MeshRenderer.material.color;
-                UpdateDetectedColor(_CurrentDetectedColor);
-                //_MeshRenderer.material.color = _CurrentDetectedColor.material.color;
+                _MeshRenderer.material.color = _CurrentDetectedColor.material.color;
             }
         }
     }
@@ -59,11 +58,6 @@ public class ColorInfoScript : MonoBehaviour
             if (_CurrentDetectedColor.material.color == Color.black)
             {
                 _PlayerMeshRenderer.material.color = _CurrentDetectedColor.material.color;
-                _Animator.SetBool("ColorDetected", false);
-                return;
-            }
-            else if(_CurrentDetectedColor.material.color == Color.grey)
-            {
                 _Animator.SetBool("ColorDetected", false);
                 return;
             }

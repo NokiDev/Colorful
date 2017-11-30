@@ -12,6 +12,8 @@ public class BinaryActivator : MonoBehaviour, IMecanism
 
     protected Activation OnActivate;
     protected Activation OnDeactivate;
+
+
     protected GameObject Player;
     private bool _HasBeenActivated;
 
@@ -39,7 +41,7 @@ public class BinaryActivator : MonoBehaviour, IMecanism
 
     protected void CheckInput()
     {
-        if (Player == null || OneActivation && _HasBeenActivated || !Input.GetKeyDown(KeyCode.Return)) return;
+        if (Player == null || OneActivation && _HasBeenActivated || !Input.GetButtonDown("Action")) return;
         if (!Activated)
         {
             Activate();

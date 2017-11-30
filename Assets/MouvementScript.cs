@@ -6,8 +6,9 @@ using UnityEngine;
 public class MouvementScript : MonoBehaviour
 {
     public float MovementSpeed = 50.0f;
-    public float MaxSpeed = 25.0f;
+    public float MaxVelocityChange = 10f;
     public float RotateSpeed = 100.0f;
+    public float JumpModifier = 10.0f;
 
     private Rigidbody _RigidBody;
     private Transform _Transform;
@@ -29,54 +30,48 @@ public class MouvementScript : MonoBehaviour
 
     private void FixedUpdate()
     {
-        float h = Input.GetAxis("Horizontal") * RotateSpeed;
-        float v = Input.GetAxis("Vertical") * MovementSpeed;
+        /*if (h != 0.0f) //Rotation with left and right. But may change.
+           {
+               _RotationAngle += Time.deltaTime * h;
+               _RotationAngle %= 360;
+               _RigidBody.AddForce((-transform.forward * v * 0.5f));
+               _Transform.localRotation = Quaternion.AngleAxis(_RotationAngle, transform.up);
+           }*/
 
-        if (_IsClimbing)
+        if (_GroundChecker.IsGrounded())//If ground allow to move and jump
         {
-            if (v != 0.0f)
+            var v = Input.GetAxis("Vertical");
+            var h = Input.GetAxis("Horizontal");
+            var velocity = new Vector3(h, 0, v); 
+            velocity = transform.TransformDirection(velocity);
+            velocity *= MovementSpeed;
+            Vector3 velocityChange = velocity - _RigidBody.velocity;
+
+            velocityChange.x = Mathf.Clamp(velocityChange.x, -MaxVelocityChange, MaxVelocityChange);
+            velocityChange.z = Mathf.Clamp(velocityChange.z, -MaxVelocityChange, MaxVelocityChange);
+            velocityChange.y = 0;
+
+            _RigidBody.AddForce(velocityChange, ForceMode.VelocityChange);
+            //Jumping
+            if (Input.GetButtonDown("Jump")&& _GroundChecker.IsGrounded())
             {
-                if (_RigidBody.velocity.magnitude < MaxSpeed)
-                {
-                    _RigidBody.AddForce(transform.up * v * ClimbingModifier);
-                }
-            }
-            if (h != 0.0f)
-            {
-                if (_RigidBody.velocity.magnitude < MaxSpeed)
-                {
-                    _RigidBody.AddForce(transform.right * h * ClimbingModifier * 0.5f);
-                }
+                //Jump
+                _RigidBody.velocity = new Vector3(_RigidBody.velocity.x, JumpModifier, _RigidBody.velocity.z);
             }
         }
         else
         {
-            v = (!_GroundChecker.IsGrounded()) ? v / 2 : v;
+            var velocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+            velocity = transform.TransformDirection(velocity);
+            velocity *= MovementSpeed/2;
+            Vector3 velocityChange = velocity - _RigidBody.velocity;
 
-            if (h != 0.0f) //Rotation with left and right. But may change.
-            {
-                _RotationAngle += Time.deltaTime * h;
-                _RotationAngle %= 360;
-                _RigidBody.AddForce((-transform.forward * v* 0.5f));// Cancel completely the force 
-                _Transform.localRotation = Quaternion.AngleAxis(_RotationAngle, transform.up);
-            }
-            if (v != 0.0f)
-            {
-                if (_RigidBody.velocity.magnitude < MaxSpeed) //Be sure we don't go too fast.
-                {
-                    _RigidBody.AddForce((transform.forward * v), ForceMode.Acceleration);
-                }
-            }
-            else//Decrease velocity.
-            {
-                 _RigidBody.AddForce(-transform.forward * v, ForceMode.Impulse); //Cancel Inertia
-            }
-        }
-        //Jumping
-        if (Input.GetKeyDown(KeyCode.Space)&& _GroundChecker.IsGrounded())
-        {
-            //Jump
-            _RigidBody.AddForce(transform.up * 10f, ForceMode.Impulse);
+            velocityChange.x = Mathf.Clamp(velocityChange.x, -MaxVelocityChange, MaxVelocityChange);
+            velocityChange.z = Mathf.Clamp(velocityChange.z, -MaxVelocityChange, MaxVelocityChange);
+            velocityChange.y = 0;
+
+            _RigidBody.AddForce(velocityChange, ForceMode.Force);
+            
         }
     }
 

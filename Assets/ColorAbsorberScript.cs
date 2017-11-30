@@ -26,10 +26,10 @@ public class ColorAbsorberScript : MonoBehaviour
 
     private void OnTriggerExit(Collider c)
     {
-        if (!DetectColor())
+        /*if (!DetectColor())
         {
-            OnColorDetected(null);
-        }
+        }*/
+        OnColorDetected(null);
     }
 
     private bool DetectColor()
@@ -37,7 +37,17 @@ public class ColorAbsorberScript : MonoBehaviour
         var hit = new RaycastHit();
         if (Physics.Raycast(transform.parent.transform.position, -transform.up, out hit, Mathf.Infinity, 1 << 10))
         {
-            OnColorDetected(hit.transform.gameObject.GetComponent<MeshRenderer>());
+            var renderer = hit.transform.gameObject.GetComponent<MeshRenderer>();
+            if(renderer.material.color != Color.grey)// Don't detect Grey color;
+            {
+                Debug.Log(Color.grey);
+                Debug.Log("Detected Color : " + renderer.material.color);
+                OnColorDetected(renderer);
+            }
+            else
+            {
+                OnColorDetected(null);
+            }
             return true;
         }
         else

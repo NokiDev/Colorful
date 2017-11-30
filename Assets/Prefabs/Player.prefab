@@ -372,9 +372,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04a7a8df750be3c4880fd38d4ff80e2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MovementSpeed: 100
-  MaxSpeed: 15
+  MovementSpeed: 20
+  MaxVelocityChange: 10
   RotateSpeed: 100
+  JumpModifier: 10
   ClimbingModifier: 0.5
   GroundChecker: {fileID: 1669597060398692}
 --- !u!124 &124401230231480280
