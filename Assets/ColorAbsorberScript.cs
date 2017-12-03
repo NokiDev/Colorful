@@ -5,7 +5,6 @@ using UnityEngine;
 public class ColorAbsorberScript : MonoBehaviour
 {
     public delegate void ColorObserver(MeshRenderer colorableObject);
-
     public ColorObserver OnColorDetected;
 
     // Use this for initialization
@@ -26,9 +25,6 @@ public class ColorAbsorberScript : MonoBehaviour
 
     private void OnTriggerExit(Collider c)
     {
-        /*if (!DetectColor())
-        {
-        }*/
         OnColorDetected(null);
     }
 

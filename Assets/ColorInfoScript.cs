@@ -6,10 +6,10 @@ public class ColorInfoScript : MonoBehaviour
 {
     public GameObject ColorChecker;
     private MeshRenderer _MeshRenderer;
-
     private MeshRenderer _PlayerMeshRenderer;
     private MeshRenderer _CurrentDetectedColor;
     private Animator _Animator;
+    private PainterScript _PlayerPainter;
 
     // Use this for initialization
     private void Start()
@@ -17,6 +17,10 @@ public class ColorInfoScript : MonoBehaviour
         _MeshRenderer = GetComponent<MeshRenderer>();
         _Animator = GetComponent<Animator>();
         _PlayerMeshRenderer = transform.parent.gameObject.GetComponent<MeshRenderer>();
+
+        _PlayerPainter = GetComponentInParent<PainterScript>();
+
+        _PlayerPainter.OnColorChanged += UpdateColorInfo;
         ColorChecker.GetComponent<ColorAbsorberScript>().OnColorDetected += UpdateDetectedColor;
     }
 
@@ -26,22 +30,19 @@ public class ColorInfoScript : MonoBehaviour
         if ((_MeshRenderer.material.color != _PlayerMeshRenderer.material.color))
         {
             //Maybe do something different if we are black or consider it's a death color.
-            /*if (Input.GetKey(KeyCode.RightShift) && Input.GetKeyDown(KeyCode.Return)) // Go to black
-            {
-                _PlayerMeshRenderer.material.color *= _MeshRenderer.material.color;
-            }*/
-            if (Input.GetKey(KeyCode.RightControl) && Input.GetKeyDown(KeyCode.Return)) // Go to White
-            {
-                _PlayerMeshRenderer.material.color += _MeshRenderer.material.color;
-            }
-            else if (Input.GetButtonDown("ColorSwap")) // Swap Colors
+            if (_CurrentDetectedColor != null && Input.GetButtonDown("ColorSwap")) // Swap Colors
             {
                 if (_PlayerMeshRenderer.material.color != Color.black)
-                    _CurrentDetectedColor.material.color = _PlayerMeshRenderer.material.color;
-                _PlayerMeshRenderer.material.color = _MeshRenderer.material.color;
-                _MeshRenderer.material.color = _CurrentDetectedColor.material.color;
+                    _CurrentDetectedColor.material.color = _PlayerPainter.GetColor();
+                _PlayerPainter.SetColor(_MeshRenderer.material.color);
+                UpdateColorInfo(_CurrentDetectedColor.material.color);
             }
         }
+    }
+
+    private void UpdateColorInfo(Color newColor)
+    {
+        _MeshRenderer.material.color = newColor;
     }
 
     private void UpdateDetectedColor(MeshRenderer renderer)
@@ -54,15 +55,12 @@ public class ColorInfoScript : MonoBehaviour
         }
         else
         {
-            _MeshRenderer.material.color = _CurrentDetectedColor.material.color;
+            UpdateColorInfo(_CurrentDetectedColor.material.color);
             if (_CurrentDetectedColor.material.color == Color.black)
             {
-                _PlayerMeshRenderer.material.color = _CurrentDetectedColor.material.color;
+                _PlayerPainter.SetColor(_CurrentDetectedColor.material.color);
                 _Animator.SetBool("ColorDetected", false);
                 return;
-            }
-            else
-            {
             }
             _Animator.SetBool("ColorDetected", true);//Run rotating animation
         }
