@@ -8,10 +8,10 @@ public class BinaryActivator : MonoBehaviour, IMecanism
 
     public MecanismBase Mecanism = null;
 
-    protected delegate void Activation();
+    public delegate void Activation();
 
-    protected Activation OnActivate;
-    protected Activation OnDeactivate;
+    public Activation OnActivate;
+    public Activation OnDeactivate;
 
 
     protected GameObject Player;
