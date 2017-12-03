@@ -12,17 +12,14 @@ public class MouvementScript : MonoBehaviour
 
     private Rigidbody _RigidBody;
     private Transform _Transform;
-    private float _RotationAngle = 0f;
-
-    private bool _IsClimbing = false;
-    public float ClimbingModifier = 0.5f;
+    public Transform _Camera;
 
     public GameObject GroundChecker;
     private GroundCheckScript _GroundChecker;
     private void Start()
     {
-        _RigidBody = GetComponent<Rigidbody>();
-        _Transform = GetComponent<Transform>();
+        _RigidBody = transform.parent.GetComponent<Rigidbody>();
+        //_Transform = GetComponent<Transform>();
         _GroundChecker = GroundChecker.GetComponent<GroundCheckScript>();
     }
 
@@ -37,11 +34,14 @@ public class MouvementScript : MonoBehaviour
                _RigidBody.AddForce((-transform.forward * v * 0.5f));
                _Transform.localRotation = Quaternion.AngleAxis(_RotationAngle, transform.up);
            }*/
+        var v = Input.GetAxis("Vertical");
+        var h = Input.GetAxis("Horizontal");
+
+        if (v != 0.0f || h !=0.0f)
+            transform.rotation = _Camera.rotation;
 
         if (_GroundChecker.IsGrounded())//If ground allow to move and jump
         {
-            var v = Input.GetAxis("Vertical");
-            var h = Input.GetAxis("Horizontal");
             var velocity = new Vector3(h, 0, v); 
             velocity = transform.TransformDirection(velocity);
             velocity *= MovementSpeed;
@@ -61,7 +61,7 @@ public class MouvementScript : MonoBehaviour
         }
         else
         {
-            var velocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+            var velocity = new Vector3(h, 0, v);
             velocity = transform.TransformDirection(velocity);
             velocity *= MovementSpeed/2;
             Vector3 velocityChange = velocity - _RigidBody.velocity;
@@ -72,19 +72,6 @@ public class MouvementScript : MonoBehaviour
 
             _RigidBody.AddForce(velocityChange, ForceMode.Force);
             
-        }
-    }
-
-    public void SetClimbingMode(bool activated)
-    {
-        _IsClimbing = activated;
-        if (activated)
-        {
-            _RigidBody.useGravity = false;
-        }
-        else
-        {
-            _RigidBody.useGravity = true;
         }
     }
 }
