@@ -13,20 +13,12 @@ public class BinaryActivator : MonoBehaviour, IMecanism
     public Activation OnActivate;
     public Activation OnDeactivate;
 
-
-    protected GameObject Player;
     private bool _HasBeenActivated;
 
     // Use this for initialization
     private void Start()
     {
         SetUp();
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
-        CheckInput();
     }
 
     protected void SetUp()
@@ -37,19 +29,6 @@ public class BinaryActivator : MonoBehaviour, IMecanism
             OnActivate();
         else
             OnDeactivate();
-    }
-
-    protected void CheckInput()
-    {
-        if (Player == null || OneActivation && _HasBeenActivated || !Input.GetButtonDown("Action")) return;
-        if (!Activated)
-        {
-            Activate();
-        }
-        else
-        {
-            Deactivate();
-        }
     }
 
     public virtual void Activate()
@@ -63,16 +42,5 @@ public class BinaryActivator : MonoBehaviour, IMecanism
     {
         OnDeactivate();
         Activated = false;
-    }
-
-    private void OnTriggerEnter(Collider c)
-    {
-        //Check look at.
-        Player = gameObject;
-    }
-
-    private void OnTriggerExit(Collider c)
-    {
-        Player = null;
     }
 }

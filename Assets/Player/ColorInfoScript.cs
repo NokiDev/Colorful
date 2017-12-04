@@ -7,9 +7,12 @@ public class ColorInfoScript : MonoBehaviour
     public GameObject ColorChecker;
     private MeshRenderer _MeshRenderer;
     private MeshRenderer _PlayerMeshRenderer;
-    private MeshRenderer _CurrentDetectedColor;
+    private Color _CurrentColor;
     private Animator _Animator;
     private PainterScript _PlayerPainter;
+
+    private IAbsorbable[] _Absorbables;
+
 
     // Use this for initialization
     private void Start()
@@ -21,7 +24,7 @@ public class ColorInfoScript : MonoBehaviour
         _PlayerPainter = GetComponentInParent<PainterScript>();
 
         _PlayerPainter.OnColorChanged += UpdateColorInfo;
-        ColorChecker.GetComponent<ColorAbsorberScript>().OnColorDetected += UpdateDetectedColor;
+        ColorChecker.GetComponent<ColorDetectorScript>().OnAbsorbablesChanged += UpdateDetectedColor;
     }
 
     // Update is called once per frame
@@ -30,12 +33,13 @@ public class ColorInfoScript : MonoBehaviour
         if ((_MeshRenderer.material.color != _PlayerMeshRenderer.material.color))
         {
             //Maybe do something different if we are black or consider it's a death color.
-            if (_CurrentDetectedColor != null && Input.GetButtonDown("ColorSwap")) // Swap Colors
+            if (Input.GetButtonDown("Absorb")) // Swap Colors
             {
-                if (_PlayerMeshRenderer.material.color != Color.black)
-                    _CurrentDetectedColor.material.color = _PlayerPainter.GetColor();
-                _PlayerPainter.SetColor(_MeshRenderer.material.color);
-                UpdateColorInfo(_CurrentDetectedColor.material.color);
+                _PlayerMeshRenderer.material.color = _MeshRenderer.material.color;
+                foreach(IAbsorbable absorbable in _Absorbables){
+                    absorbable.Absorb();
+                }
+                ComputeNewColor();
             }
         }
     }
@@ -45,25 +49,43 @@ public class ColorInfoScript : MonoBehaviour
         _MeshRenderer.material.color = newColor;
     }
 
-    private void UpdateDetectedColor(MeshRenderer renderer)
+    private void UpdateDetectedColor(IAbsorbable[] absorbables)
     {
-        _CurrentDetectedColor = renderer;
-        if(_CurrentDetectedColor == null)
+        _Absorbables = absorbables;
+        ComputeNewColor();
+    }
+
+    private void ComputeNewColor()
+    {
+        Color endColor = new Color(0f, 0f, 0f, 0f);
+        bool detected = false;
+        foreach (var absorbable in _Absorbables)
         {
-            _MeshRenderer.material.color = _PlayerMeshRenderer.material.color;
-            _Animator.SetBool("ColorDetected", false);
-        }
-        else
-        {
-            UpdateColorInfo(_CurrentDetectedColor.material.color);
-            if (_CurrentDetectedColor.material.color == Color.black)
+            var c = absorbable.GetColor();
+            if (c == Color.grey) continue;
+            if (c == Color.black)
             {
-                _PlayerPainter.SetColor(_CurrentDetectedColor.material.color);
-                _Animator.SetBool("ColorDetected", false);
-                return;
+                endColor = Color.black;
+                _PlayerPainter.SetColor(endColor);
+                absorbable.Absorb();
+                detected = false;
+                break;
             }
-            _Animator.SetBool("ColorDetected", true);//Run rotating animation
+            endColor += c;
+            endColor.b = (endColor.b > 1f) ? 1f : endColor.b;
+            endColor.b = (endColor.b < 0f) ? 0f : endColor.b;
+            endColor.r = (endColor.r > 1f) ? 1f : endColor.r;
+            endColor.g = (endColor.g > 1f) ? 1f : endColor.g;
+            endColor.a = 1f;
+            detected = true;
         }
+        if (endColor.a == 0f)//Alpha to zero means no addition to a color; and so 
+        {
+            endColor = _PlayerMeshRenderer.material.color;
+            detected = false;
+        }
+        UpdateColorInfo(endColor);
+        _Animator.SetBool("ColorDetected", detected);//Run rotating animation
     }
 }
 

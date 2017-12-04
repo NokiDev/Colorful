@@ -79,6 +79,7 @@ GameObject:
   - component: {fileID: 114403150663293330}
   - component: {fileID: 135116224322077646}
   - component: {fileID: 114200921763678122}
+  - component: {fileID: 114749109900074254}
   m_Layer: 11
   m_Name: Button
   m_TagString: Untagged
@@ -216,7 +217,7 @@ GameObject:
   - component: {fileID: 33574258692553090}
   - component: {fileID: 65638233163383732}
   - component: {fileID: 23524559380150966}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -250,7 +251,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4719145165359070}
   m_Layer: 0
-  m_Name: Tutorial2
+  m_Name: BlackColorTutorial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -285,6 +286,7 @@ GameObject:
   - component: {fileID: 33035730844576810}
   - component: {fileID: 65982261431458630}
   - component: {fileID: 23862110878650548}
+  - component: {fileID: 114395035747513166}
   m_Layer: 10
   m_Name: Cube
   m_TagString: Untagged
@@ -1095,7 +1097,18 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Black color is absorbed, by your organism.
+  m_Text: Black color is contagious, and absorbed by your organism.
+--- !u!114 &114395035747513166
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1958102143356606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7eeebeef634b07448dbe025c455fbab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114403150663293330
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1160,6 +1173,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Activated: 0
+--- !u!114 &114749109900074254
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1231396465843296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fa67b04956832b4da7b7951639f214a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!135 &135116224322077646
 SphereCollider:
   m_ObjectHideFlags: 1
