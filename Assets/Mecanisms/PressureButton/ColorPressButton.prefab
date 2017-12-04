@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 114255544365235736}
   - component: {fileID: 135032602021112716}
   - component: {fileID: 114059225944745470}
+  - component: {fileID: 114457979181616122}
   m_Layer: 11
   m_Name: Button
   m_TagString: Untagged
@@ -227,6 +228,17 @@ MonoBehaviour:
   Activated: 0
   Mecanism: {fileID: 0}
   ActivationColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &114457979181616122
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1478431192984916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fa67b04956832b4da7b7951639f214a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!135 &135032602021112716
 SphereCollider:
   m_ObjectHideFlags: 1

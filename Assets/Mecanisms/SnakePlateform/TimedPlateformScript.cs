@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TimedPlateformScript : MonoBehaviour {
+public class TimedPlateformScript : MecanismBase {
 
     public int length;
     public float steps = 1f;//1 change every seconds;
@@ -14,29 +14,44 @@ public class TimedPlateformScript : MonoBehaviour {
     void Start()
     {
         _MeshRenderers = GetComponentsInChildren<MeshRenderer>();
+        OnActivation = StartMoving;
+        OnDeactivation = StopMoving;
     }
-	
+
+    void StartMoving()
+    {
+        //TODO run a coroutine in loop of steps
+    }
+
+    void StopMoving()
+    {
+        //Stop The Snake.
+    }
+
 	// Update is called once per frame
 	void Update () {
 
-        //TODO Place in a corouting.
-        timer += Time.deltaTime;
-        if(timer >= steps)
+        //TODO Place in a coroutine.
+        if (Activated)
         {
-            var last = _Next - length;
-            if(last < 0)
-                last = _MeshRenderers.Length + last;
+            timer += Time.deltaTime;
+            if(timer >= steps)
+            {
+                var last = _Next - length;
+                if(last < 0)
+                    last = _MeshRenderers.Length + last;
 
-            TurnToColor(last, Color.black);
-            TurnToColor(_Next, Color.grey);
+                TurnToColor(last, Color.black);
+                TurnToColor(_Next, Color.grey);
 
-            //
-            _Next++;
-            if (_Next >= _MeshRenderers.Length)
-                _Next = 0;
-            else if (_Next < 0)
-                _Next = _MeshRenderers.Length - 1;
-            timer = 0.0f;
+                //
+                _Next++;
+                if (_Next >= _MeshRenderers.Length)
+                    _Next = 0;
+                else if (_Next < 0)
+                    _Next = _MeshRenderers.Length - 1;
+                timer = 0.0f;
+            }
         }
 	}
 
