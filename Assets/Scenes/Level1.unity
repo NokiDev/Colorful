@@ -2675,6 +2675,16 @@ Prefab:
       propertyPath: m_Name
       value: AnotherOne
       objectReference: {fileID: 0}
+    - target: {fileID: 114391920714335576, guid: 1ade2d3aa5e3fcf4b86312661c93a6a0,
+        type: 2}
+      propertyPath: Activated
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114391920714335576, guid: 1ade2d3aa5e3fcf4b86312661c93a6a0,
+        type: 2}
+      propertyPath: steps
+      value: 1.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1ade2d3aa5e3fcf4b86312661c93a6a0, type: 2}
   m_IsPrefabParent: 0
